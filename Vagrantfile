@@ -8,10 +8,10 @@
 
 Vagrant.configure("2") do |configs|
   username = ENV["urname"] || 'test'
-  device = "#{username}srfcpro4"
+  device = "srfcpro4"
   configs.vm.define "#{device}" do |config|
     config.vm.box = "archlinux/archlinux"
-    config.vm.hostname = "#{device}"
+    config.vm.hostname = "#{username}#{device}"
     config.vm.provider "virtualbox" do |v|
       v.memory = 4096
       v.cpus = 4
