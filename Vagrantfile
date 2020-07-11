@@ -8,6 +8,7 @@
 
 Vagrant.configure("2") do |configs|
   username = ENV["urname"] || 'test'
+  puppetenv = ENV["puppetenv"] || 'master'
   device = "srfcpro4"
   configs.vm.define "#{device}" do |config|
     config.vm.box = "archlinux/archlinux"
@@ -18,8 +19,10 @@ Vagrant.configure("2") do |configs|
       v.customize ["modifyvm", :id, "--vram", "32"]
     end
     config.vm.provision "shell", inline: <<-SHELL
-    yes | pacman -Sy
-    yes | LC_ALL=en_US.UTF-8 pacman -S puppet
+    yes | LC_ALL=en_US.UTF-8 pacman -Sy
+    yes | LC_ALL=en_US.UTF-8 pacman --needed --noprogressbar -S sudo git puppet
+    gem install r10k
+    /root/.gem/ruby/2.7.0/bin/r10k
     SHELL
   end
 end

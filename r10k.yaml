@@ -1,0 +1,11 @@
+---
+:cachedir: /opt/puppetlabs/puppet/cache/r10k
+:sources:
+  puppet:
+    basedir: /etc/puppetlabs/code/environments
+    command: git@github.com:Mahagon/localpuppetrepo.git
+:deploy:
+  puppet_path: '/usr/bin/puppet'
+  generate_types: true
+  puppetfile: true
+  purge_levels: ["deployment", "environment", "puppetfile"]
