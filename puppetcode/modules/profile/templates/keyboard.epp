@@ -1,0 +1,4 @@
+<%- | String $layout | -%>
+# File is managed by Puppet
+
+KEYMAP=<%= $layout %>

@@ -1,28 +1,43 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
-# All Vagrant configuration is done below. The "2" in Vagrant.configure
-# configures the configuration version (we support older styles for
-# backwards compatibility). Please don't change it unless you know what
-# you're doing.
+Vagrant.require_version '>= 2.0.0'
+VAGRANTFILE_API_VERSION = '2'
 
-Vagrant.configure("2") do |configs|
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |configs|
   username = ENV["urname"] || 'test'
-  puppetenv = ENV["puppetenv"] || 'master'
+  codedir = "/vagrant"
+  puppetcodedir = "#{codedir}/puppetcode"
   device = "srfcpro4"
   configs.vm.define "#{device}" do |config|
     config.vm.box = "archlinux/archlinux"
     config.vm.hostname = "#{username}#{device}"
+    # config.vm.synced_folder ".", "/vagrant", type: "rsync"
     config.vm.provider "virtualbox" do |v|
       v.memory = 4096
       v.cpus = 4
-      v.customize ["modifyvm", :id, "--vram", "32"]
+      v.customize ["modifyvm", :id, "--vram", "128"]
+      v.customize ["modifyvm", :id, "--graphicscontroller", "vmsvga"]
+      v.customize ["modifyvm", :id, "--clipboard-mode", "bidirectional"]
+      v.customize ["modifyvm", :id, "--monitorcount", "2"]
     end
-    config.vm.provision "shell", inline: <<-SHELL
-    yes | LC_ALL=en_US.UTF-8 pacman -Sy
-    yes | LC_ALL=en_US.UTF-8 pacman --needed --noprogressbar -S sudo git puppet
-    gem install r10k
-    /root/.gem/ruby/2.7.0/bin/r10k
+    config.vm.provision "shell", name: 'pacman', inline: <<-SHELL
+    pacman -Syu --noconfirm
+    pacman --noconfirm --needed --noprogressbar -S git puppet fakeroot lttng-ust openssl-1.0 sudo
+    SHELL
+    config.vm.provision "shell", name: 'install powershell and puppet modules', privileged: false, inline: <<-SHELL
+    if ! pwsh --version &> /dev/null
+    then
+      cd ~
+      git clone https://aur.archlinux.org/powershell-bin.git
+      cd powershell-bin/
+      makepkg -sic --noconfirm --noprogressbar
+    fi
+    pwsh -File #{codedir}/puppet_install_modules.ps1 #{puppetcodedir}
+    SHELL
+    config.vm.provision "shell", name: 'puppet apply', inline: <<-SHELL
+    cd #{puppetcodedir}
+    puppet apply --modulepath modules manifests/site.pp --hiera_config hiera.yaml --debug
     SHELL
   end
 end
