@@ -59,6 +59,8 @@ packages:
       ensure: latest
     powershell-bin:
       ensure: latest
+    teams:
+      ensure: latest
     # yay-bin:
     #   ensure: latest
     # lib32-llvm-libs-git:
