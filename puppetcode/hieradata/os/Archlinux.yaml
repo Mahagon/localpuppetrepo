@@ -30,6 +30,8 @@ packages:
       ensure: latest
     kscreen:
       ensure: latest
+    plasma5-applets-active-window-control:
+      ensure: latest
     sddm:
       ensure: latest
     dolphin:
