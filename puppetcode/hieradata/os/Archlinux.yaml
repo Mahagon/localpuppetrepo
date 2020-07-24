@@ -48,6 +48,8 @@ packages:
       ensure: latest
     noto-fonts-extra:
       ensure: latest
+    gopass:
+      ensure: latest
   yay:
     visual-studio-code-bin:
       ensure: latest
