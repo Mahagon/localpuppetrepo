@@ -23,7 +23,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |configs|
     end
     config.vm.provision "shell", name: 'pacman', inline: <<-SHELL
     pacman -Syu --noconfirm
-    pacman --noconfirm --needed --noprogressbar -S git puppet fakeroot lttng-ust openssl-1.0 sudo
+    pacman --noconfirm --needed --noprogressbar -S git puppet fakeroot lttng-ust openssl-1.0 sudo virtualbox-guest-utils
     SHELL
     config.vm.provision "shell", name: 'install powershell and puppet modules', privileged: false, inline: <<-SHELL
     if ! pwsh --version &> /dev/null
