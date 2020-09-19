@@ -54,6 +54,8 @@ packages:
       ensure: latest
     gopass:
       ensure: latest
+    ansible:
+      ensure: latest
   yay:
     visual-studio-code-bin:
       ensure: latest
